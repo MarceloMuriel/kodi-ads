@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+	<setting id="video_folder" type="folder" label="26000"
+		default="/home/pi/kodi/videos" />
+	<setting id="ads_folder" type="folder" label="26001"
+		default="/home/pi/kodi/pub" />
+	<setting id="audio_folder" type="folder" label="26002"
+		default="/home/pi/kodi/audios" />
+</settings>
