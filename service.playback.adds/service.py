@@ -12,19 +12,22 @@ import json
 PLUGIN_ID = "service.playback.ads"
 addon = xbmcaddon.Addon(PLUGIN_ID)
 
-# Read the ads.json
-ads = json.load(open('ressources/ads.json')) 
-print(ads)
+def run():
+    # Try to create the required folders
+    videos_dir = addon.getSetting('video_folder')
+    audios_dir = addon.getSetting('audio_folder')
+    # Read the files
+    videos = os.listdir(videos_dir) if os.path.isdir(videos_dir) else []
+    audios = os.listdir(audios_dir) if os.path.isdir(audios_dir) else []
+    
+    if not videos: return
+    
+    while(not xbmc.abortRequested):
+        # Playback time in seconds
+        if xbmc.getGlobalIdleTime() > (10 * 60):
+            if xbmc.Player().isPlaying():
+                xbmc.Player().stop()
+        # Sleep in ms
+        xbmc.sleep(60000)
 
-# Try to create the required folders
-videos = addon.getSetting('video_folder')
-ads = addon.getSetting('ads_folder')
-audios = addon.getSetting('audio_folder')
-
-while(not xbmc.abortRequested):
-    # Playback time in seconds
-    if xbmc.getGlobalIdleTime() > (10 * 60):
-        if xbmc.Player().isPlaying():
-            xbmc.Player().stop()
-    # Sleep in ms
-    xbmc.sleep(60000)
+run()
