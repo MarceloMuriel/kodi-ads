@@ -3,17 +3,51 @@
 	<category label="32800">
 		<setting label="32801" type="folder" id="video_folder"
 			default="/home/pi/kodi/videos" />
-		<setting label="32802" type="folder" id="audio_folder"
-			default="/home/pi/kodi/audios" />
+		<!-- <setting label="32802" type="folder" id="audio_folder"
+			default="/home/pi/kodi/audios" /> -->
 	</category>
 	<category label="32810">
-		<setting label="32811" type="video" id="vad1" default="" />
-		<setting label="32812" type="text" id="vad1_t" default="0mr" />
-		<setting label="32811" type="video" id="vad2" default="" />
-		<setting label="32812" type="text" id="vad2_t" default="0mr" />
+		<setting label="32811" type="video" id="v1" default="" />
+		<setting label="32812" type="text" id="v1_t" default="3mr" />
+		<setting label="32811" type="video" id="v2" default="" />
+		<setting label="32812" type="text" id="v2_t" default="10mr" />
+		<setting label="32811" type="video" id="v3" default="" />
+		<setting label="32812" type="text" id="v3_t" default="1hr" />
+		<setting label="32811" type="video" id="v4" default="" />
+		<setting label="32812" type="text" id="v4_t" default="30mr" />
+		<setting label="32811" type="video" id="v5" default="" />
+		<setting label="32812" type="text" id="v5_t" default="5mr" />
+		<setting label="32811" type="video" id="v6" default="" />
+		<setting label="32812" type="text" id="v6_t" default="5mr" />
+		<setting label="32811" type="video" id="v7" default="" />
+		<setting label="32812" type="text" id="v7_t" default="5mr" />
+		<setting label="32811" type="video" id="v8" default="" />
+		<setting label="32812" type="text" id="v8_t" default="5mr" />
+		<setting label="32811" type="video" id="v9" default="" />
+		<setting label="32812" type="text" id="v9_t" default="5mr" />
+		<setting label="32811" type="video" id="v10" default="" />
+		<setting label="32812" type="text" id="v10_t" default="5mr" />
 	</category>
 	<category label="32830">
-		<setting label="32831" type="image" id="iad1" default="" />
-		<setting label="32832" type="text" id="iad1_t" default="0m" />
+		<setting label="32831" type="image" id="i1" default="" />
+		<setting label="32832" type="text" id="i1_t" default="1m" />
+		<setting label="32831" type="image" id="i2" default="" />
+		<setting label="32832" type="text" id="i2_t" default="50m" />
+		<setting label="32831" type="image" id="i3" default="" />
+		<setting label="32832" type="text" id="i3_t" default="4hr" />
+		<setting label="32831" type="image" id="i4" default="" />
+		<setting label="32832" type="text" id="i4_t" default="5m" />
+		<setting label="32831" type="image" id="i5" default="" />
+		<setting label="32832" type="text" id="i5_t" default="5m" />
+		<setting label="32831" type="image" id="i6" default="" />
+		<setting label="32832" type="text" id="i6_t" default="5m" />
+		<setting label="32831" type="image" id="i7" default="" />
+		<setting label="32832" type="text" id="i7_t" default="5m" />
+		<setting label="32831" type="image" id="i8" default="" />
+		<setting label="32832" type="text" id="i8_t" default="5m" />
+		<setting label="32831" type="image" id="i9" default="" />
+		<setting label="32832" type="text" id="i9_t" default="5m" />
+		<setting label="32831" type="image" id="i10" default="" />
+		<setting label="32832" type="text" id="i10_t" default="5m" />
 	</category>
 </settings>
