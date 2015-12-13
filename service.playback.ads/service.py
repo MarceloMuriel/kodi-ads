@@ -11,6 +11,7 @@ import json
 
 PLUGIN_ID = "service.playback.ads"
 addon = xbmcaddon.Addon(PLUGIN_ID)
+ROOT_DIR = addon.getAddonInfo('path')
 
 def run():
     # Try to create the required folders
@@ -20,7 +21,7 @@ def run():
     videos = os.listdir(videos_dir) if os.path.isdir(videos_dir) else []
     audios = os.listdir(audios_dir) if os.path.isdir(audios_dir) else []
     
-    if not videos: return
+    if not videos: print('No videos to play back at {0}!'.format(videos_dir)); return
     
     while(not xbmc.abortRequested):
         # Playback time in seconds
