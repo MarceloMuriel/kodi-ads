@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+	<!-- All %s must remain in string but can change position -->
+	<string id="32800">Vidéo/Audio</string>
+	<string id="32801">Vidéos</string>
+	<string id="32802">Audios</string>
+	<string id="32810">Pubs Vidéo</string>
+	<string id="32811">Vidéo</string>
+	<string id="32812">Timing</string>
+	<string id="32830">Pubs Image</string>
+	<string id="32831">Image</string>
+	<string id="32832">Timing 15m</string>
+</strings>

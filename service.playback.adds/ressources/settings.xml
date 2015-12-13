@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
-	<setting id="video_folder" type="folder" label="26000"
-		default="/home/pi/kodi/videos" />
-	<setting id="ads_folder" type="folder" label="26001"
-		default="/home/pi/kodi/pub" />
-	<setting id="audio_folder" type="folder" label="26002"
-		default="/home/pi/kodi/audios" />
+	<category label="32800">
+		<setting label="32801" type="folder" id="video_folder"
+			default="/home/pi/kodi/videos" />
+		<setting label="32802" type="folder" id="audio_folder"
+			default="/home/pi/kodi/audios" />
+	</category>
+	<category label="32810">
+		<setting label="32811" type="video" id="vad1" default="" />
+		<setting label="32812" type="text" id="vad1_t" default="0mr" />
+		<setting label="32811" type="video" id="vad2" default="" />
+		<setting label="32812" type="text" id="vad2_t" default="0mr" />
+	</category>
+	<category label="32830">
+		<setting label="32831" type="image" id="iad1" default="" />
+		<setting label="32832" type="text" id="iad1_t" default="0m" />
+	</category>
 </settings>
