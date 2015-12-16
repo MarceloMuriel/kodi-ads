@@ -3,8 +3,8 @@
 	<category label="32800">
 		<setting label="32801" type="folder" id="video_folder"
 			default="/home/pi/kodi/videos" />
-		<!-- <setting label="32802" type="folder" id="audio_folder"
-			default="/home/pi/kodi/audios" /> -->
+		<setting label="32802" type="folder" id="audio_folder"
+			default="/home/pi/kodi/audios" />
 	</category>
 	<category label="32810">
 		<setting label="32811" type="video" id="v1" default="" />
