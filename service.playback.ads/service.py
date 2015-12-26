@@ -14,7 +14,7 @@ import sys
 PLUGIN_ID = "service.playback.ads"
 addon = xbmcaddon.Addon(PLUGIN_ID)
 ROOT_DIR = addon.getAddonInfo('path')
-PLAYER_AUDIO = 'omxplayer' if 'linux' in sys.platform else 'afplay'
+PLAYER_AUDIO = 'mpg321' if 'linux' in sys.platform else 'afplay'
 
 def isVideo(file):
     ''' It checks if the given file has a common video extension '''
@@ -62,10 +62,6 @@ class XBMCPlayer( xbmc.Player ):
         xbmc.log("KODIPUB: Playback Started")
 
     def onPlayBackEnded( self ):
-        # Display black image
-    	blackWindow = PictureWindow()
-    	blackWindow.setPic(ROOT_DIR + '/black_1280x720.jpg')                                             
-    	blackWindow.show()
         xbmc.log("KODIPUB: Playback Ended")
 
     def onPlayBackStopped( self ):
@@ -96,14 +92,21 @@ def run():
     videos = [v for v in videos if isVideo(os.path.join(videos_dir, v))]
     
     # Kill any previous audio player
-    os.system("pid=$(<'{0}/audioplayer.pid'); kill $pid; pkill {1}".format(ROOT_DIR, PLAYER_AUDIO))
+    # cmd_kill = "pid=$(<'{0}/audioplayer.pid'); kill $pid; pkill {1}".format(ROOT_DIR, PLAYER_AUDIO)
+    with open('{0}/audioplayer.pid'.format(ROOT_DIR)) as f: pid = f.read().strip()
+    cmd_kill = "kill {0}; pkill {1};".format(pid, PLAYER_AUDIO)
+    os.system(cmd_kill)
     # Launch the audio player in the background
     cmd = "bash '{0}/audioplayer.sh' {1} {2} & echo $! > '{0}/audioplayer.pid'".format(ROOT_DIR, PLAYER_AUDIO, audios_dir)
-    print("KODIPUB: {0}".format(cmd))
-    # os.system(cmd)
+    os.system(cmd)
     
     if not videos: xbmc.log('KODIPUB: No videos to play back at {0}!'.format(videos_dir)); return
-    
+
+    # Display black image
+    blackWindow = PictureWindow()
+    blackWindow.setPic(ROOT_DIR + '/black_1280x720.jpg')
+    blackWindow.show()   
+ 
     # Read the ads
     ads = []
     MAX_ADS = 10
@@ -163,7 +166,7 @@ def run():
                 msg = 'KODIPUB: Playing next video {0} @ idx {1}, {2}s long, {3}s cum_time'
                 xbmc.log(msg.format(vid, vidx, vid_time, cum_time))
                 # Sleep at least 500 ms to avoid launching the same ad twice
-                xbmc.sleep(600)
+                xbmc.sleep(1000)
             # Point to the next video
             vidx = vidx + 1 if vidx + 1 < len(videos) else 0
         else:
@@ -207,9 +210,12 @@ def run():
             sleepSecs = min(sleepSecs, player.getTotalTime() - player.getTime())
             # xbmc.log('KODIPUB: Sleeping {0}s'.format(sleepSecs))
             xbmc.sleep(int(round(sleepSecs * 1000)))
-        
-    # Kill any previous audio player
-    os.system("pid=$(<'{0}/audioplayer.pid'); kill $pid; pkill {1}".format(ROOT_DIR, PLAYER_AUDIO))
+    
+    print("KODIPUB: Stopping KodiPub...")    
+    # Kill the audio player
+    with open('{0}/audioplayer.pid'.format(ROOT_DIR)) as f: pid = f.read().strip()
+    cmd_kill = "kill {0}; pkill {1};".format(pid, PLAYER_AUDIO)
+    os.system(cmd_kill)   
     # Set the volume to the max value   
     xbmc.executebuiltin('SetVolume(100)')    
     # Stop the player 
