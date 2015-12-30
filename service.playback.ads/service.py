@@ -99,7 +99,7 @@ def run():
     
     # Kill any previous audio player
     # cmd_kill = "pid=$(<'{0}/audioplayer.pid'); kill $pid; pkill {1}".format(ROOT_DIR, PLAYER_AUDIO)
-    with open('{0}/audioplayer.pid'.format(ROOT_DIR)) as f: pid = f.read().strip()
+    with open('{0}/audioplayer.pid'.format(ROOT_DIR), 'a+') as f: pid = f.read().strip()
     cmd_kill = "kill {0}; pkill {1};".format(pid, PLAYER_AUDIO)
     os.system(cmd_kill)
 
