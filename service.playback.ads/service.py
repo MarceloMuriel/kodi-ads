@@ -56,23 +56,27 @@ def isVideo(file):
 
 class XBMCPlayer( xbmc.Player ):
     def __init__( self, *args ):
-	self.enabled = True
+        self.enabled = True
+        # Display black image
+        self.blackWindow = PictureWindow()
+        self.blackWindow.setPic(ROOT_DIR + '/black_1280x720.jpg')
 
     def onPlayBackStarted( self ):
+        self.blackWindow.close()
         xbmc.log("KODIPUB: Playback Started")
 
     def onPlayBackEnded( self ):
+        self.blackWindow.show()
         xbmc.log("KODIPUB: Playback Ended")
 
     def onPlayBackStopped( self ):
-	# The stop command can only come from the user or another addon
-	self.enabled = False
+        # The stop command can only come from the user or another addon
+        self.enabled = False
+        self.blackWindow.close()
         xbmc.log("KODIPUB: Playback Stopped")
 
     def canRun(self):
-	return self.enabled
-
-player = XBMCPlayer()
+        return self.enabled
 
 class PictureWindow(xbmcgui.Window):
     def __init__(self):
@@ -84,6 +88,8 @@ class PictureWindow(xbmcgui.Window):
         self.close()
     
 def run():
+    player = XBMCPlayer()
+    
     # Try to create the required folders
     videos_dir = addon.getSetting('video_folder')
     audios_dir = addon.getSetting('audio_folder')
@@ -96,17 +102,9 @@ def run():
     with open('{0}/audioplayer.pid'.format(ROOT_DIR)) as f: pid = f.read().strip()
     cmd_kill = "kill {0}; pkill {1};".format(pid, PLAYER_AUDIO)
     os.system(cmd_kill)
-    # Launch the audio player in the background
-    cmd = "bash '{0}/audioplayer.sh' {1} {2} & echo $! > '{0}/audioplayer.pid'".format(ROOT_DIR, PLAYER_AUDIO, audios_dir)
-    os.system(cmd)
-    
-    if not videos: xbmc.log('KODIPUB: No videos to play back at {0}!'.format(videos_dir)); return
 
-    # Display black image
-    blackWindow = PictureWindow()
-    blackWindow.setPic(ROOT_DIR + '/black_1280x720.jpg')
-    blackWindow.show()   
- 
+    if not videos: xbmc.log('KODIPUB: No videos to play back at {0}!'.format(videos_dir)); return
+    
     # Read the ads
     ads = []
     MAX_ADS = 10
@@ -139,13 +137,17 @@ def run():
         ad = parseAd('image', i, t)
         if ad: ads.append(ad)
     
+    # Launch the audio player in the background
+    cmd = "bash '{0}/audioplayer.sh' {1} {2} & echo $! > '{0}/audioplayer.pid'".format(ROOT_DIR, PLAYER_AUDIO, audios_dir)
+    os.system(cmd)
+    
     vidx = 0
     cum_time = 0
     vid_time = 0
     curr_time = 0
     # Set the volume to 0
     xbmc.executebuiltin('SetVolume(1)')
-    while(not xbmc.abortRequested and player.canRun()):
+    while(not xbmc.abortRequested):
         # Default time to sleep every cycle at the end
         sleepSecs = 1
         vid = os.path.join(videos_dir, videos[vidx])
@@ -220,7 +222,5 @@ def run():
     xbmc.executebuiltin('SetVolume(100)')    
     # Stop the player 
     player.stop()
-    # Hide the background
-    blackWindow.close()
     
 run()
