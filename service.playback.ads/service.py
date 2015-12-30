@@ -15,7 +15,7 @@ import time
 PLUGIN_ID = "service.playback.ads"
 addon = xbmcaddon.Addon(PLUGIN_ID)
 ROOT_DIR = addon.getAddonInfo('path')
-PLAYER_AUDIO = 'mpg321' if 'linux' in sys.platform else 'afplay'
+PLAYER_AUDIO = 'omxplayer' if 'linux' in sys.platform else 'afplay'
 
 def isVideo(file):
     ''' It checks if the given file has a common video extension '''
@@ -161,16 +161,16 @@ def run():
             # Resuming playback?
             if seek_time > 0:
                 xbmc.log('KODIPUB: Resuming after ad at {0}s'.format(seek_time))
-                xbmc.sleep(10)
+                xbmc.sleep(50)
                 player.seekTime(seek_time)
                 # Sleep at least 500 ms to let the video load and avoid showing the ad twice.
-                xbmc.sleep(1000)
+                xbmc.sleep(1500)
                 # Reset time
                 seek_time = 0
             else:
                 cum_time += vid_time
                 # Sleep at least 500 ms to let the video load and avoid showing the ad twice.
-                xbmc.sleep(1000)
+                xbmc.sleep(1500)
                 # Get a copy of the total video time
                 vid_time = player.getTotalTime()
                 msg = 'KODIPUB: Playing next video @idx {0}, {1}s long, {2}s cum_time, from {3}'
@@ -195,16 +195,16 @@ def run():
                         # play the ad
                         player.play(ad['path'])
                         # Sleep at least 500 ms to let the video load
-                        xbmc.sleep(1000)
+                        xbmc.sleep(1500)
                         # Wait until the ad is over
-                        sleep = int(round(player.getTotalTime() * 1000 - 1000))
+                        sleep = int(round(player.getTotalTime() * 1000 - 1500))
                         print('KODIPUB: Sleeping {0}s while ad is playing..'.format(sleep))
                         xbmc.sleep(sleep)
                     elif ad['type'] == 'image':
                         picWindow = PictureWindow()
                         picWindow.setPic(ad['path'])
                         picWindow.show()
-                        xbmc.sleep(10000)
+                        xbmc.sleep(60000)
                         picWindow.close()
                         del picWindow
                         # Resume playback
