@@ -99,7 +99,7 @@ def run():
     
     # Kill any previous audio player
     # cmd_kill = "pid=$(<'{0}/audioplayer.pid'); kill $pid; pkill {1}".format(ROOT_DIR, PLAYER_AUDIO)
-    with open('{0}/audioplayer.pid'.format(ROOT_DIR), 'a+') as f: pid = f.read().strip()
+    with open('{0}/audioplayer.pid'.format(ROOT_DIR), 'a+') as f: f.seek(0, 0); pid = f.read().strip()
     cmd_kill = "kill {0}; pkill {1};".format(pid, PLAYER_AUDIO)
     os.system(cmd_kill)
 
@@ -144,10 +144,12 @@ def run():
     vidx = 0
     cum_time = 0
     vid_time = 0
-    curr_time = 0
+    seek_time = 0
     # Set the volume to 0
     xbmc.executebuiltin('SetVolume(1)')
     while(not xbmc.abortRequested):
+        msg = 'KODIPUB: running...'
+        print(msg.format(vidx, cum_time, vid_time, seek_time))
         # Default time to sleep every cycle at the end
         sleepSecs = 1
         vid = os.path.join(videos_dir, videos[vidx])
@@ -156,29 +158,29 @@ def run():
             # Play back the current video
             player.play(vid)
             # Resuming playback?
-            if curr_time > 0:
-                xbmc.log('KODIPUB: Resuming playback after ad at {0}s'.format(curr_time))
-                player.seekTime(curr_time)
+            if seek_time > 0:
+                xbmc.log('KODIPUB: Resuming after ad at {0}s'.format(seek_time))
+                player.seekTime(seek_time)
                 # Reset time
-                curr_time = 0
+                seek_time = 0
             else:
                 cum_time += vid_time
                 # Get a copy of the total video time
                 vid_time = player.getTotalTime()
-                msg = 'KODIPUB: Playing next video {0} @ idx {1}, {2}s long, {3}s cum_time'
-                xbmc.log(msg.format(vid, vidx, vid_time, cum_time))
-                # Sleep at least 500 ms to avoid launching the same ad twice
-                xbmc.sleep(1000)
+                msg = 'KODIPUB: Playing next video @idx {0}, {1}s long, {2}s cum_time, from {3}'
+                xbmc.log(msg.format(vidx, vid_time, cum_time, vid))
+            # Sleep at least 500 ms to avoid launching the same ad twice
+            xbmc.sleep(1000)
             # Point to the next video
             vidx = vidx + 1 if vidx + 1 < len(videos) else 0
         else:
             # Check if it is time to playback an ad
             for ad in ads:
                 t = cum_time + player.getTime()
-                if t > 0 and int(round(t)) % ad['time'] == 0:
-                    print('KODIPUB: total time:', t)
+                if t > 0 and int(t) % ad['time'] == 0:
                     # Save the current playback time to resume later
-                    curr_time = player.getTime()
+                    seek_time = player.getTime()
+                    print('KODIPUB: tot time: {0}, next vidx: {1}, cum_time: {2}'.format(t, vidx, cum_time))
                     # Pause while waiting to see if it is a video or image
                     player.pause()
                     xbmc.log('KODIPUB: playing ad: ' + ad['path'])
@@ -214,10 +216,12 @@ def run():
             xbmc.sleep(int(round(sleepSecs * 1000)))
     
     print("KODIPUB: Stopping KodiPub...")    
-    # Kill the audio player
-    with open('{0}/audioplayer.pid'.format(ROOT_DIR)) as f: pid = f.read().strip()
+    # Kill the audio player   
+    with open('{0}/audioplayer.pid'.format(ROOT_DIR), 'r') as f: pid = f.read().strip()
     cmd_kill = "kill {0}; pkill {1};".format(pid, PLAYER_AUDIO)
-    os.system(cmd_kill)   
+    print("KODIPUB: Stopping audio {0}".format(cmd_kill))
+    os.system(cmd_kill)
+    xbmc.sleep(200)
     # Set the volume to the max value   
     xbmc.executebuiltin('SetVolume(100)')    
     # Stop the player 
