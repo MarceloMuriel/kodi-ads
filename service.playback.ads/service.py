@@ -10,6 +10,7 @@ import xbmcaddon
 import json
 import re
 import sys
+import time
 
 PLUGIN_ID = "service.playback.ads"
 addon = xbmcaddon.Addon(PLUGIN_ID)
@@ -148,8 +149,8 @@ def run():
     # Set the volume to 0
     xbmc.executebuiltin('SetVolume(1)')
     while(not xbmc.abortRequested):
-        msg = 'KODIPUB: running...'
-        print(msg.format(vidx, cum_time, vid_time, seek_time))
+        msg = 'KODI_PUB: running.. next vidx: {0}, cum_time: {1}, vid_time: {2}, seek_time: {3}, t: {4}'  
+        print(msg.format(vidx, cum_time, vid_time, seek_time, int(int(time.time()) / 5) * 5))
         # Default time to sleep every cycle at the end
         sleepSecs = 1
         vid = os.path.join(videos_dir, videos[vidx])
@@ -187,11 +188,13 @@ def run():
                     if ad['type'] == 'video':
                         # Point to current video (instead of next)
                         vidx = vidx - 1 if vidx >= 1 else len(videos) - 1
-                        # player.stop()
+                        player.stop()
                         # play the ad
                         player.play(ad['path'])
                         # Wait until the ad is over
-                        xbmc.sleep(int(round(player.getTotalTime() * 1000)))
+                        sleep = int(round(player.getTotalTime() * 1000))
+                        print('KODIPUB: Going to sleep {0}s while ad is playing..'.format(sleep))
+                        xbmc.sleep(sleep)
                     elif ad['type'] == 'image':
                         picWindow = PictureWindow()
                         picWindow.setPic(ad['path'])
