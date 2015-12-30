@@ -161,17 +161,20 @@ def run():
             # Resuming playback?
             if seek_time > 0:
                 xbmc.log('KODIPUB: Resuming after ad at {0}s'.format(seek_time))
+                xbmc.sleep(10)
                 player.seekTime(seek_time)
+                # Sleep at least 500 ms to let the video load and avoid showing the ad twice.
+                xbmc.sleep(1000)
                 # Reset time
                 seek_time = 0
             else:
                 cum_time += vid_time
+                # Sleep at least 500 ms to let the video load and avoid showing the ad twice.
+                xbmc.sleep(1000)
                 # Get a copy of the total video time
                 vid_time = player.getTotalTime()
                 msg = 'KODIPUB: Playing next video @idx {0}, {1}s long, {2}s cum_time, from {3}'
                 xbmc.log(msg.format(vidx, vid_time, cum_time, vid))
-            # Sleep at least 500 ms to avoid launching the same ad twice
-            xbmc.sleep(1000)
             # Point to the next video
             vidx = vidx + 1 if vidx + 1 < len(videos) else 0
         else:
@@ -191,9 +194,11 @@ def run():
                         player.stop()
                         # play the ad
                         player.play(ad['path'])
+                        # Sleep at least 500 ms to let the video load
+                        xbmc.sleep(1000)
                         # Wait until the ad is over
-                        sleep = int(round(player.getTotalTime() * 1000))
-                        print('KODIPUB: Going to sleep {0}s while ad is playing..'.format(sleep))
+                        sleep = int(round(player.getTotalTime() * 1000 - 1000))
+                        print('KODIPUB: Sleeping {0}s while ad is playing..'.format(sleep))
                         xbmc.sleep(sleep)
                     elif ad['type'] == 'image':
                         picWindow = PictureWindow()
