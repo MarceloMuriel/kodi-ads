@@ -16,6 +16,7 @@ PLUGIN_ID = "service.playback.ads"
 addon = xbmcaddon.Addon(PLUGIN_ID)
 ROOT_DIR = addon.getAddonInfo('path')
 PLAYER_AUDIO = 'omxplayer' if 'linux' in sys.platform else 'afplay'
+PLAYER_PARAMS = ' -o local ' if 'linux' in sys.platform else ' '
 
 def isVideo(file):
     ''' It checks if the given file has a common video extension '''
@@ -139,7 +140,7 @@ def run():
         if ad: ads.append(ad)
     
     # Launch the audio player in the background
-    cmd = "bash '{0}/audioplayer.sh' {1} {2} & echo $! > '{0}/audioplayer.pid'".format(ROOT_DIR, PLAYER_AUDIO, audios_dir)
+    cmd = "bash '{0}/audioplayer.sh' '{1}' '{2}' & echo $! > '{0}/audioplayer.pid'".format(ROOT_DIR, PLAYER_AUDIO + PLAYER_PARAMS, audios_dir)
     os.system(cmd)
     
     vidx = 0
